@@ -46,7 +46,7 @@ namespace CIDNamer
 			{
 				lines.Add( $"{(useCHRPrefix ? "FFXIV_CHR" : "")}{entry.Key:X16} = {entry.Value}" );
 			}
-
+			Directory.CreateDirectory( Path.GetDirectoryName( filePath ) );
 			File.WriteAllLines( filePath, lines );
 		}
 

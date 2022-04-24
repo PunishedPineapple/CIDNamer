@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 
 using Dalamud.Game.ClientState;
@@ -104,51 +105,56 @@ namespace CIDNamer
 
 		private void OnLogin( object sender, EventArgs e )
 		{
-			WriteCurrentCharacterData( 5000 );
+			WriteCurrentCharacterData( 15000 );
 		}
 
-		internal void WriteCurrentCharacterData( int delay_mSec )
+		internal void WriteCurrentCharacterData( int maxDelay_mSec = 500 )
 		{
-			Task.Run( async () =>
+			Task.Run( () =>
 			{
-				await Task.Delay( delay_mSec );
+				var startTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+				while( mClientState.LocalPlayer == null )
+				{
+					if( DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() > startTime + maxDelay_mSec )
+					{
+						PluginLog.LogError( "LocalPlayer never became valid within the allotted time!  Unable to save this character's data to the specified file." );
+						return;
+					}
+					else
+					{
+						Thread.Sleep( 1000 );
+					}
+				}
 
 				var fullPath =  Environment.ExpandEnvironmentVariables( mConfiguration.DataFilePath );
-				if( mClientState.LocalPlayer != null )
+				CIDMapFile mapFile;
+				if( !File.Exists( fullPath ) )
 				{
-					CIDMapFile mapFile;
-					if( !File.Exists( fullPath ) )
-					{
-						PluginLog.LogInformation( $"Specified file \"{fullPath}\" doesn't exist; creating new file." );
-						mapFile = new();
-					}
-					else
-					{
-						mapFile = CIDMapFile.LoadFile( fullPath );
-						if( mapFile == null )
-						{
-							PluginLog.LogError( $"Unable to open file \"{fullPath}\".  Aborting attempts to save this character's data, since this could delete data from the specified file that already exists." );
-							return;
-						}
-					}
-
-					string playerServerString = $"{mClientState.LocalPlayer.Name} ({mClientState.LocalPlayer.HomeWorld.GameData.Name})";
-					if( mapFile.CIDMap.ContainsKey( mClientState.LocalContentId ) )
-					{
-						mapFile.CIDMap[mClientState.LocalContentId] = playerServerString;
-					}
-					else
-					{
-						mapFile.CIDMap.TryAdd( mClientState.LocalContentId, playerServerString );
-					}
-
-					LastSeenMapFile = mapFile;
-					mapFile.WriteFile( fullPath, mConfiguration.WriteCHRPrefix );
+					PluginLog.LogInformation( $"Specified file \"{fullPath}\" doesn't exist; creating new file." );
+					mapFile = new();
 				}
 				else
 				{
-					PluginLog.LogError( "LocalPlayer was null!  Unable to save this character's data to the specified file." );
+					mapFile = CIDMapFile.LoadFile( fullPath );
+					if( mapFile == null )
+					{
+						PluginLog.LogError( $"Unable to open file \"{fullPath}\".  Aborting attempts to save this character's data, since this could delete data from the specified file that already exists." );
+						return;
+					}
 				}
+
+				string playerServerString = $"{mClientState.LocalPlayer.Name} ({mClientState.LocalPlayer.HomeWorld.GameData.Name})";
+				if( mapFile.CIDMap.ContainsKey( mClientState.LocalContentId ) )
+				{
+					mapFile.CIDMap[mClientState.LocalContentId] = playerServerString;
+				}
+				else
+				{
+					mapFile.CIDMap.TryAdd( mClientState.LocalContentId, playerServerString );
+				}
+
+				LastSeenMapFile = mapFile;
+				mapFile.WriteFile( fullPath, mConfiguration.WriteCHRPrefix );
 			} );
 		}
 

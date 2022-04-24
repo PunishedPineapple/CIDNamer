@@ -89,7 +89,7 @@ namespace CIDNamer
 			{
 				if( ImGui.Button( "Write Current Character to File" ) )
 				{
-					mPlugin.WriteCurrentCharacterData( 0 );
+					mPlugin.WriteCurrentCharacterData();
 				}
 
 				ImGui.Spacing();
