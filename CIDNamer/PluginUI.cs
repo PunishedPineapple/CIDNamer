@@ -58,7 +58,8 @@ namespace CIDNamer
 				if( ImGui.Button( "Save and Close" ) )
 				{
 					string newPath = Environment.ExpandEnvironmentVariables( mSettingsWindowPathString );
-					mPlugin.LastSeenMapFile.WriteFile( newPath, mConfiguration.WriteCHRPrefix );
+					var newFile = mPlugin.LastSeenMapFile ?? new CIDMapFile();
+					newFile.WriteFile( newPath, mConfiguration.WriteCHRPrefix );
 
 					//	If the new file couldn't be saved for some reason and didn't already throw, make sure that we throw before we save the plugin settings.
 					if( !File.Exists( newPath ) )
