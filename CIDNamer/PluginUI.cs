@@ -44,7 +44,6 @@ namespace CIDNamer
 			if( ImGui.Begin( "CIDNamer Settings",
 				ImGuiWindowFlags.AlwaysAutoResize | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse ) )
 			{
-				//***** TODO: Input box to set file path.
 				ImGui.Text( "Data file path:" );
 				ImGui.InputText( "###Data file path input", ref mSettingsWindowPathString, 512 );
 				ImGui.Checkbox( "Save content IDs with the \"FFXIV_CHR\" prefix.", ref mConfiguration.mWriteCHRPrefix );
@@ -57,17 +56,7 @@ namespace CIDNamer
 
 				if( ImGui.Button( "Save and Close" ) )
 				{
-					string newPath = Environment.ExpandEnvironmentVariables( mSettingsWindowPathString );
-					var newFile = mPlugin.LastSeenMapFile ?? new CIDMapFile();
-					newFile.WriteFile( newPath, mConfiguration.WriteCHRPrefix );
-
-					//	If the new file couldn't be saved for some reason and didn't already throw, make sure that we throw before we save the plugin settings.
-					if( !File.Exists( newPath ) )
-					{
-						throw new FileNotFoundException( $"The specified file {newPath} could not be accessed." );
-					}
-
-					mConfiguration.DataFilePath = newPath;
+					mConfiguration.DataFilePath = mSettingsWindowPathString;
 					mConfiguration.Save();
 					SettingsWindowVisible = false;
 				}
