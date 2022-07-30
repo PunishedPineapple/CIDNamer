@@ -7,6 +7,9 @@ This is a plugin for [XIVLauncher/Dalamud](https://github.com/goatcorp/FFXIVQuic
 ## Usage
 This plugin works automatically.  You can change the output folder in the plugin settings if you want to use this for some other purpose.
 
+## Installation
+This is not a main repo plugin.  Can be installed from [my third party plugin repo](https://github.com/PunishedPineapple/DalamudPluginRepo).
+
 ## Precautions
 Don't share the generated list with anyone else.  Content IDs aren't ultra sensitive per se, but it's probably about the same risk level to your account as giving someone random your license plate number, home address, or phone number would be to you IRL.
 
