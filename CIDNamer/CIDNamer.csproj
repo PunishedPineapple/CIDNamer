@@ -2,7 +2,7 @@
 	<PropertyGroup>
 		<TargetFramework>net5.0-windows</TargetFramework>
 		<Platforms>AnyCPU</Platforms>
-		<Version>1.0.0.1</Version>
+		<Version>1.0.0.2</Version>
 		<Authors>PunishedPineapple</Authors>
 		<Product />
 		<Copyright>Copyright © PunishedPineapple 2022</Copyright>
@@ -12,12 +12,20 @@
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<DebugSymbols>true</DebugSymbols>
+		<DebugType>full</DebugType>
 		<NoWarn>1701;1702;</NoWarn>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<DebugSymbols>true</DebugSymbols>
+		<DebugType>full</DebugType>
 	</PropertyGroup>
+
+	<ItemGroup>
+	  <PackageReference Include="DalamudPackager" Version="2.1.7" />
+	</ItemGroup>
 
 	<ItemGroup>
 		<Reference Include="Dalamud">
@@ -44,5 +52,17 @@
 			<Private>false</Private>
 			<HintPath>$(APPDATA)\XIVLauncher\addon\Hooks\dev\Lumina.Excel.dll</HintPath>
 		</Reference>
+		<Reference Include="FFXIVClientStructs">
+			<Private>false</Private>
+			<HintPath>$(APPDATA)\XIVLauncher\addon\Hooks\dev\FFXIVClientStructs.dll</HintPath>
+		</Reference>
+		<Reference Include="CheapLoc">
+			<Private>false</Private>
+			<HintPath>$(APPDATA)\XIVLauncher\addon\Hooks\dev\CheapLoc.dll</HintPath>
+		</Reference>
+	</ItemGroup>
+
+	<ItemGroup>
+		<Content Include="Resources\**" DestinationFolder="Resources\$(RecursiveDir)" CopyToOutputDirectory="Always" />
 	</ItemGroup>
 </Project>
