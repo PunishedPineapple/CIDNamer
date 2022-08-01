@@ -6,5 +6,6 @@
   "RepoUrl": "https://github.com/PunishedPineapple/CIDNamer",
   "IconUrl": "https://github.com/PunishedPineapple/CIDNamer/raw/main/docs/Images/icon.png",
   "ImageUrls": [],
-  "Tags": [ "Settings", "Utility" ]
+  "Tags": [ "Settings", "Utility" ],
+  "DalamudApiLevel": 7
 }
